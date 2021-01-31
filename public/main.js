@@ -88,15 +88,16 @@ const uniformLocations = {
 // glmatrix.net - glMatrix
 // - JavaScript で行列を扱うライブラリ
 // - public/gl-matrix-min.js
-const matrix = glMatrix.mat4.create();
+const mat4 = glMatrix.mat4;
+const matrix = mat4.create();
 
-glMatrix.mat4.translate(matrix, matrix, [.2, .5, 0]);
+mat4.translate(matrix, matrix, [.2, .5, 0]);
 
-glMatrix.mat4.scale(matrix, matrix, [0.25, 0.25, 0.25]);
+mat4.scale(matrix, matrix, [0.25, 0.25, 0.25]);
 
 function animate() {
   requestAnimationFrame(animate);
-  glMatrix.mat4.rotateZ(matrix, matrix, Math.PI/2 / 70);
+  mat4.rotateZ(matrix, matrix, Math.PI/2 / 70);
   gl.uniformMatrix4fv(uniformLocations.matrix, false, matrix);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
