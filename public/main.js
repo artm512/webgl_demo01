@@ -33,7 +33,7 @@ const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vertexShader, `
 attribute vec3 position;
 void main() {
-  gl_Position = vec4(position, 1)
+  gl_Position = vec4(position, 1);
 }
 `);
 gl.compileShader(vertexShader);
@@ -41,7 +41,7 @@ gl.compileShader(vertexShader);
 const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(fragmentShader,`
 void main() {
-  gl_FragColor = vec4(1, 0, 0, 1);
+    gl_FragColor = vec4(1, 0, 0, 1);
 }
 `);
 gl.compileShader(fragmentShader);
