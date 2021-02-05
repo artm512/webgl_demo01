@@ -85,13 +85,125 @@ function randomColor() {
 //   ...randomColor(),
 // ];
 
-let colorData = [];
-for (let face = 0; face < 6; face++) {
-  let faceColor = randomColor();
-  for (let vertex = 0; vertex < 6; vertex++) {
-    colorData.push(...faceColor);
-  }
-}
+// let colorData = [];
+// for (let face = 0; face < 6; face++) {
+//   let faceColor = randomColor();
+//   for (let vertex = 0; vertex < 6; vertex++) {
+//     colorData.push(...faceColor);
+//   }
+// }
+
+let colorData = [
+  0.8208771372239099,
+  0.8377264682056472,
+  0.5595970833259835,
+  0.8208771372239099,
+  0.8377264682056472,
+  0.5595970833259835,
+  0.8208771372239099,
+  0.8377264682056472,
+  0.5595970833259835,
+  0.8208771372239099,
+  0.8377264682056472,
+  0.5595970833259835,
+  0.8208771372239099,
+  0.8377264682056472,
+  0.5595970833259835,
+  0.8208771372239099,
+  0.8377264682056472,
+  0.5595970833259835,
+  0.6383697899098857,
+  0.7542970804033661,
+  0.15987469526874187,
+  0.6383697899098857,
+  0.7542970804033661,
+  0.15987469526874187,
+  0.6383697899098857,
+  0.7542970804033661,
+  0.15987469526874187,
+  0.6383697899098857,
+  0.7542970804033661,
+  0.15987469526874187,
+  0.6383697899098857,
+  0.7542970804033661,
+  0.15987469526874187,
+  0.6383697899098857,
+  0.7542970804033661,
+  0.15987469526874187,
+  0.4748058969160487,
+  0.1434985986967683,
+  0.33132941767944335,
+  0.4748058969160487,
+  0.1434985986967683,
+  0.33132941767944335,
+  0.4748058969160487,
+  0.1434985986967683,
+  0.33132941767944335,
+  0.4748058969160487,
+  0.1434985986967683,
+  0.33132941767944335,
+  0.4748058969160487,
+  0.1434985986967683,
+  0.33132941767944335,
+  0.4748058969160487,
+  0.1434985986967683,
+  0.33132941767944335,
+  0.6797687963970465,
+  0.497134726814609,
+  0.8521957428261815,
+  0.6797687963970465,
+  0.497134726814609,
+  0.8521957428261815,
+  0.6797687963970465,
+  0.497134726814609,
+  0.8521957428261815,
+  0.6797687963970465,
+  0.497134726814609,
+  0.8521957428261815,
+  0.6797687963970465,
+  0.497134726814609,
+  0.8521957428261815,
+  0.6797687963970465,
+  0.497134726814609,
+  0.8521957428261815,
+  0.18835062149041593,
+  0.3262350267153872,
+  0.6784154021153825,
+  0.18835062149041593,
+  0.3262350267153872,
+  0.6784154021153825,
+  0.18835062149041593,
+  0.3262350267153872,
+  0.6784154021153825,
+  0.18835062149041593,
+  0.3262350267153872,
+  0.6784154021153825,
+  0.18835062149041593,
+  0.3262350267153872,
+  0.6784154021153825,
+  0.18835062149041593,
+  0.3262350267153872,
+  0.6784154021153825,
+  0.5548753105818753,
+  0.9993365733813392,
+  0.9789370174013655,
+  0.5548753105818753,
+  0.9993365733813392,
+  0.9789370174013655,
+  0.5548753105818753,
+  0.9993365733813392,
+  0.9789370174013655,
+  0.5548753105818753,
+  0.9993365733813392,
+  0.9789370174013655,
+  0.5548753105818753,
+  0.9993365733813392,
+  0.9789370174013655,
+  0.5548753105818753,
+  0.9993365733813392,
+  0.9789370174013655
+];
+
 
 const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -148,13 +260,15 @@ gl.enable(gl.DEPTH_TEST);
 
 const uniformLocations = {
   matrix: gl.getUniformLocation(program, `matrix`),
-}
+};
 
 // glmatrix.net - glMatrix
 // - JavaScript で行列を扱うライブラリ
 // - public/gl-matrix-min.js
 const mat4 = glMatrix.mat4;
-const matrix = mat4.create();
+// const matrix = mat4.create();
+const modelMatrix = mat4.create();
+const viewMatrix = mat4.create();
 const projectionMatrix = mat4.create();
 mat4.perspective(projectionMatrix, 
   75 * Math.PI/180, // vertical field-of-view (angle, radians)
@@ -163,19 +277,24 @@ mat4.perspective(projectionMatrix,
   1e4 // far cull distance
 );
 
-const finalMatrix = mat4.create();
+const mvMatrix = mat4.create();
+const mvpMatrix = mat4.create();
 
-mat4.translate(matrix, matrix, [.2, .5, -2]);
+mat4.translate(modelMatrix, modelMatrix, [-1.5, 0, -2]);
+
+mat4.translate(viewMatrix, viewMatrix, [-3, 0, 1]);
+mat4.invert(viewMatrix, viewMatrix);
 
 // mat4.scale(matrix, matrix, [0.5, 0.5, 0.5]);
 
 function animate() {
   requestAnimationFrame(animate);
-  mat4.rotateZ(matrix, matrix, Math.PI/2 / 70);
-  mat4.rotateX(matrix, matrix, Math.PI/2 / 70);
+  // mat4.rotateZ(matrix, matrix, Math.PI/2 / 70);
+  // mat4.rotateX(matrix, matrix, Math.PI/2 / 70);
 
-  mat4.multiply(finalMatrix, projectionMatrix, matrix);
-  gl.uniformMatrix4fv(uniformLocations.matrix, false, finalMatrix);
+  mat4.multiply(mvMatrix, viewMatrix, modelMatrix);
+  mat4.multiply(mvpMatrix, projectionMatrix, mvMatrix);
+  gl.uniformMatrix4fv(uniformLocations.matrix, false, mvpMatrix);
   gl.drawArrays(gl.TRIANGLES, 0, vertexData.length / 3);
 }
 
