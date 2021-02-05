@@ -21,10 +21,20 @@ const vertexData = [
   -1, -1, 0,  // V3.position
 ];
 
-const colorData = [
-  1, 0, 0,    // V1.color
-  0, 1, 0,    // V2.color
-  0, 0, 1,    // V3.color
+// const colorData = [
+//   1, 0, 0,    // V1.color
+//   0, 1, 0,    // V2.color
+//   0, 0, 1,    // V3.color
+// ];
+
+function randomColor() {
+  return [Math.random(), Math.random(), Math.random()];
+}
+
+let colorData = [
+  ...randomColor(),
+  ...randomColor(),
+  ...randomColor(),
 ];
 
 const positionBuffer = gl.createBuffer();
