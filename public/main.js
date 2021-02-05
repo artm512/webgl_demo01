@@ -16,9 +16,57 @@ if(!gl) {
 // 9. draw
 
 const vertexData = [
-  0, 1, 0,    // V1.position
-  1, -1, 0,   // V2.position
-  -1, -1, 0,  // V3.position
+  // 0, 1, 0,    // V1.position
+  // 1, -1, 0,   // V2.position
+  // -1, -1, 0,  // V3.position
+
+  // Front
+  0.5, 0.5, 0.5,
+  0.5, -.5, 0.5,
+  -.5, 0.5, 0.5,
+  -.5, 0.5, 0.5,
+  0.5, -.5, 0.5,
+  -.5, -.5, 0.5,
+
+  // Left
+  -.5, 0.5, 0.5,
+  -.5, -.5, 0.5,
+  -.5, 0.5, -.5,
+  -.5, 0.5, -.5,
+  -.5, -.5, 0.5,
+  -.5, -.5, -.5,
+
+  // Back
+  -.5, 0.5, -.5,
+  -.5, -.5, -.5,
+  0.5, 0.5, -.5,
+  0.5, 0.5, -.5,
+  -.5, -.5, -.5,
+  0.5, -.5, -.5,
+
+  // Right
+  0.5, 0.5, -.5,
+  0.5, -.5, -.5,
+  0.5, 0.5, 0.5,
+  0.5, 0.5, 0.5,
+  0.5, -.5, 0.5,
+  0.5, -.5, -.5,
+
+  // // Top
+  0.5, 0.5, 0.5,
+  0.5, 0.5, -.5,
+  -.5, 0.5, 0.5,
+  -.5, 0.5, 0.5,
+  0.5, 0.5, -.5,
+  -.5, 0.5, -.5,
+
+  // Bottom
+  0.5, -.5, 0.5,
+  0.5, -.5, -.5,
+  -.5, -.5, 0.5,
+  -.5, -.5, 0.5,
+  0.5, -.5, -.5,
+  -.5, -.5, -.5,
 ];
 
 // const colorData = [
@@ -31,11 +79,19 @@ function randomColor() {
   return [Math.random(), Math.random(), Math.random()];
 }
 
-let colorData = [
-  ...randomColor(),
-  ...randomColor(),
-  ...randomColor(),
-];
+// let colorData = [
+//   ...randomColor(),
+//   ...randomColor(),
+//   ...randomColor(),
+// ];
+
+let colorData = [];
+for (let face = 0; face < 6; face++) {
+  let faceColor = randomColor();
+  for (let vertex = 0; vertex < 6; vertex++) {
+    colorData.push(...faceColor);
+  }
+}
 
 const positionBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -52,9 +108,7 @@ precision mediump float;
 attribute vec3 position;
 attribute vec3 color;
 varying vec3 vColor;
-
 uniform mat4 matrix;
-
 void main() {
   vColor = color;
   gl_Position = matrix * vec4(position, 1);
@@ -90,6 +144,7 @@ gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);
 
 gl.useProgram(program);
+gl.enable(gl.DEPTH_TEST);
 
 const uniformLocations = {
   matrix: gl.getUniformLocation(program, `matrix`),
@@ -108,8 +163,9 @@ mat4.scale(matrix, matrix, [0.25, 0.25, 0.25]);
 function animate() {
   requestAnimationFrame(animate);
   mat4.rotateZ(matrix, matrix, Math.PI/2 / 70);
+  mat4.rotateX(matrix, matrix, Math.PI/2 / 70);
   gl.uniformMatrix4fv(uniformLocations.matrix, false, matrix);
-  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  gl.drawArrays(gl.TRIANGLES, 0, vertexData.length / 3);
 }
 
 animate();
