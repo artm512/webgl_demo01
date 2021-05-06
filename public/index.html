@@ -9,11 +9,9 @@
   <script src="main.js" defer></script>
 </head>
 <body>
-  <!-- <h1>WebGL!!!</h1>
-  <canvas width="240" height="240"></canvas> -->
-  <canvas></canvas>
+  <canvas id="canvas"></canvas>
   <script>
-    const _c = document.getElementByTagName('canvas')[0];
+    const _c = document.getElementById('canvas');
     _c.width = window.innerWidth;
     _c.height = window.innerHeight;
   </script>
